@@ -1,0 +1,1 @@
+find $1 -exec sh -c 'lib/sox-14.4.2/sox -b 16 -r 16000 -e signed -c 1 --endian big "$0" "${0%.raw}".wav; rm "$0"' '{}' \;
