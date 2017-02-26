@@ -12,4 +12,4 @@ train_labels = np.array([0, 1, 2])
 clf = KNeighborsClassifier(n_neighbors=1)
 clf.fit(train_samples, train_labels)
 
-print clf.predict([[0.1, 0.3, 0.4], [0.5, 0.5, 0.5]])
+print clf.predict([[0.1, 0.3, 0.4], [0.5, 0.5, 0.5], [1.1, 1.1, 1.1], [1, 1.6, 2], [1.9, 1.9, 1.9]])
