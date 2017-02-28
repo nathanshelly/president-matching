@@ -2,3 +2,4 @@ venv
 an4
 .vscode
 white_noise
+*.pyc
