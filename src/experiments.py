@@ -1,5 +1,5 @@
-import numpy as np
 from mfcc_knn import files_to_mfcc_features, train_knn, test_knn
+import numpy as np
 
 def experiment1(n_neighbors=5):
     """Train a knn model on ~1000 white noise and ~1000 voice snippets.
