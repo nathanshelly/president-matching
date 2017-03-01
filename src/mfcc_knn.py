@@ -1,6 +1,6 @@
 import os
 import essentia.standard
-import scipy.io.wavfile as wav
+import soundfile as sf
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -23,12 +23,12 @@ def mfcc_features_for_signals(signals, approx_window_size=2048):
     return np.vstack(tuple([mfcc_feature(signal, approx_window_size) for signal in signals]))
 
 def load_audio(dirpath):
-    files = [os.path.join(dp, fname) for dp, dn, fns in os.walk(dirpath) for fname in fns]
-    return [wav.read(fname) for fname in files]
+    files = [(os.path.join(dp, fname), os.path.basename(dp)) for dp, dn, fns in os.walk(dirpath) for fname in fns]
+    return [sf.read(fname) for fname, _ in files], [folder for _, folder in files]
 
 def files_to_mfcc_features(dirpath):
-    signals = load_audio(dirpath)
-    return mfcc_features_for_signals([x[1] for x in signals])
+    signals, folders = load_audio(dirpath)
+    return mfcc_features_for_signals([x[0] for x in signals]), folders
 
 def train_knn(data, labels, n_neighbors=5):
     """Train and return a KNN model"""
