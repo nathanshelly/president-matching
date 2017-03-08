@@ -1,7 +1,6 @@
 from sklearn.mixture import GaussianMixture
 
 def train_gmm_set(data):
-	print data
 	return {label: train_gmm(features) for label, features in data.iteritems()}
 
 def train_gmm(data, num_components = 5):
