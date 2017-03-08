@@ -2,7 +2,6 @@ import os
 import essentia.standard
 import soundfile as sf
 import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
 
 def mfcc_feature(signal):
     """Cuts the signal into frames of close to window_size, and does an MFCC of each frame
@@ -32,12 +31,3 @@ def load_audio(dirpath):
 def files_to_mfcc_features(dirpath):
     signals, folders = load_audio(dirpath)
     return mfcc_features_for_signals([x[0] for x in signals]), folders
-
-def train_knn(data, labels, n_neighbors=5):
-    """Train and return a KNN model"""
-    clf = KNeighborsClassifier(n_neighbors=n_neighbors)
-    clf.fit(data, labels)
-    return clf
-
-def test_knn(knn_classifier, data):
-    return knn_classifier.predict(data)

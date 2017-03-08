@@ -1,4 +1,6 @@
-from mfcc_knn import files_to_mfcc_features, train_knn, test_knn
+from mfcc import files_to_mfcc_features
+from gmm import train_gmm_set, test_gmm
+from knn import train_knn, test_knn
 import numpy as np
 
 def experiment1(n_neighbors=5):
@@ -76,3 +78,23 @@ def experiment5(n_neighbors=3):
     test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
 
     print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data), exp_labels)]
+
+def experiment6():
+	"""
+    Train a gmm with 7 voice samples from each of Nathan, Sasha, and Pardo
+    Test with two voice samples from each of us
+    """
+	train_data, train_labels = files_to_mfcc_features('data/natasha_and_pardo/train')
+	unique_train_labels = set(train_labels)
+	gmm_train_data = {label: [] for label in unique_train_labels}
+
+	for feature_vector, label in zip(train_data, train_labels):
+		gmm_train_data[label].append(feature_vector)
+
+	gmm_dict = train_gmm_set(gmm_train_data)
+	print gmm_dict
+    
+	# test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
+
+
+    # print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data), exp_labels)]
