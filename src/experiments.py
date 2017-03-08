@@ -54,8 +54,8 @@ def experiment3(n_neighbors=3):
 
 def experiment4(n_neighbors=3):
     """
-    Train a knn with 8 voice samples from each of Nathan and Sasha, and 8 samples of white noise.abs
-    Test with one voice sample from each of us, and one sample of white noise.
+    Train a knn with 7 voice samples from each of Nathan and Sasha
+    Test with two voice samples from each of us.
     """
 
     train_data, train_labels = files_to_mfcc_features('data/natasha_pairwise/train')
@@ -65,4 +65,14 @@ def experiment4(n_neighbors=3):
 
     print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data), exp_labels)]
 
-    
+def experiment5(n_neighbors=3):
+    """
+    Train a knn with 7 voice samples from each of Nathan, Sasha, and Pardo
+    Test with two voice samples from each of us
+    """
+    train_data, train_labels = files_to_mfcc_features('data/natasha_and_pardo/train')
+    clf = train_knn(train_data, train_labels, n_neighbors)
+
+    test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
+
+    print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data), exp_labels)]

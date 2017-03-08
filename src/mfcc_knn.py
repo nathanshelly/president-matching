@@ -4,23 +4,26 @@ import soundfile as sf
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
-def mfcc_feature(signal, approx_window_size=2048):
+def mfcc_feature(signal):
     """Cuts the signal into frames of close to window_size, and does an MFCC of each frame
     
     NOTE: Currently treats whole signal as one frame
     """
     hann = essentia.standard.Windowing()
     spectrum = essentia.standard.Spectrum()
-    spec = spectrum(hann(signal.astype(np.single)))
+    window = hann(signal.astype(np.single))
+    if window.size % 2 != 0:
+        window = window[:window.size - 1]
+    spec = spectrum(window)
     mfcc = essentia.standard.MFCC(inputSize=len(spec))
 
     bands, mfccs = mfcc(spec)
 
     return np.concatenate((bands, mfccs))
 
-def mfcc_features_for_signals(signals, approx_window_size=2048):
+def mfcc_features_for_signals(signals):
     """Compute the MFCC feature vector for each signal, and return them in a matrix"""
-    return np.vstack(tuple([mfcc_feature(signal, approx_window_size) for signal in signals]))
+    return np.vstack(tuple([mfcc_feature(signal) for signal in signals]))
 
 def load_audio(dirpath):
     files = [(os.path.join(dp, fname), os.path.basename(dp)) for dp, dn, fns in os.walk(dirpath) for fname in fns]
