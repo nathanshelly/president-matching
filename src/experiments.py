@@ -92,9 +92,7 @@ def experiment6():
 		gmm_train_data[label].append(feature_vector)
 
 	gmm_dict = train_gmm_set(gmm_train_data)
-	print gmm_dict
     
-	# test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
-
-
-    # print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data), exp_labels)]
+	test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
+	
+	print [(test, exp, test == exp) for test, exp in zip(test_gmms(gmm_dict, test_data), exp_labels)]
