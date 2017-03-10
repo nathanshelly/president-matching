@@ -1,5 +1,5 @@
 import os
-import essentia.standard
+from essentia.standard import Windowing, Spectrum, MFCC
 import soundfile as sf
 import numpy as np
 
@@ -8,17 +8,26 @@ def mfcc_feature(signal):
     
     NOTE: Currently treats whole signal as one frame
     """
-    hann = essentia.standard.Windowing()
-    spectrum = essentia.standard.Spectrum()
-    window = hann(signal.astype(np.single))
-    if window.size % 2 != 0:
-        window = window[:window.size - 1]
-    spec = spectrum(window)
-    mfcc = essentia.standard.MFCC(inputSize=len(spec))
+    hann = Windowing(type = 'hann')
+    spectrum = Spectrum()
 
-    bands, mfccs = mfcc(spec)
+	# mfccs = []
 
-    return np.concatenate((bands, mfccs))
+	# for frame in FrameGenerator(audio, frameSize = 1024, hopSize = 512):
+	# 	mfcc_bands, mfcc_coeffs = mfcc(spectrum(w(frame)))
+	#     mfccs.append(mfcc_coeffs)
+
+	# mfccs = essentia.array(mfccs).T
+
+    # window = hann(signal.astype(np.single))
+    # if window.size % 2 != 0:
+    #     window = window[:window.size - 1]
+    # spec = spectrum(window)
+    # mfcc = MFCC(inputSize=len(spec))
+
+    # bands, mfccs = mfcc(spec)
+
+    # return np.concatenate((bands, mfccs))
 
 def mfcc_features_for_signals(signals):
     """Compute the MFCC feature vector for each signal, and return them in a matrix"""
@@ -30,4 +39,5 @@ def load_audio(dirpath):
 
 def files_to_mfcc_features(dirpath):
     signals, folders = load_audio(dirpath)
+	# since throwing away mfccs, any reason to get them in first places?
     return mfcc_features_for_signals([x[0] for x in signals]), folders
