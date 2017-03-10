@@ -5,8 +5,9 @@ import soundfile as sf
 import numpy as np
 
 def mfcc_feature(signal):
-	"""Cuts the signal into frames of close to window_size, and does an MFCC of each frame
-	NOTE: Currently treats whole signal as one frame
+	"""
+    Cuts the signal into frames and does an MFCC of each frame,
+    returning a pool holding numpy arrays of coefficient vectors 
 	"""
 	hann = Windowing(type = 'hann')
 	spectrum = Spectrum()
@@ -19,13 +20,16 @@ def mfcc_feature(signal):
 		pool.add('mfcc_coeffs', mfcc_coeffs)
 		pool.add('mfcc_bands', mfcc_bands)
 
-	# print pool['mfcc_coeffs'].shape
-	# print pool['mfcc_bands'].shape
-
+    # pool currently holds mfcc_coeffs and mfcc_bands
+    # as numpy arrays of coeff vectors per frame
 	return pool
 
 def mfcc_features_for_signals(signals):
-    """Compute the MFCC feature vector for each signal, and return them in a matrix"""
+    """
+    Compute the MFCC feature vector for each signal
+    Returns 3d numpy array of signals where each signal
+    is represented as a numpy array of mfcc coefficients
+    """
     return np.array([mfcc_feature(signal)['mfcc_coeffs'] for signal in signals])
 
 def load_audio(dirpath):
@@ -33,13 +37,21 @@ def load_audio(dirpath):
     return [sf.read(fname) for fname, _ in files], [folder for _, folder in files]
 
 def files_to_mfcc_features(dirpath):
+    """
+    Returns the 3d numpy array returned by mfcc_features_for_signals
+    and a list of labels
+    """
     signals, folders = load_audio(dirpath)
-	# since throwing away mfccs, any reason to get them in first places?
     return mfcc_features_for_signals([x[0] for x in signals]), folders
 
 def unfold_matrix_list_with_labels(feature_matrices, labels):
-    print feature_matrices.shape
-
+    """
+    Converts numpy array of signals where each signal
+    is represented as a numpy array of mfcc coefficients
+    into 2d vector where each value in the vector is an array of
+    mfcc coefficients along with list of labels of same size, where
+    each labels corresponds to the value associated with a given feature_vector
+    """
     temp = [(vec, label) for vecs, label in zip(feature_matrices, labels) for vec in vecs]
     
     return map(list, zip(*temp))
