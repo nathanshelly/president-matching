@@ -11,23 +11,14 @@ def mfcc_feature(signal):
     hann = Windowing(type = 'hann')
     spectrum = Spectrum()
 
-	# mfccs = []
+	pool = essentia.Pool()
 
-	# for frame in FrameGenerator(audio, frameSize = 1024, hopSize = 512):
-	# 	mfcc_bands, mfcc_coeffs = mfcc(spectrum(w(frame)))
-	#     mfccs.append(mfcc_coeffs)
+	for frame in FrameGenerator(audio, frameSize = 1024, hopSize = 512):
+		mfcc_bands, mfcc_coeffs = mfcc(spectrum(hann(frame)))
+		pool.add('lowlevel.mfcc', mfcc_coeffs)
+		pool.add('lowlevel.mfcc_bands', mfcc_bands)
 
-	# mfccs = essentia.array(mfccs).T
-
-    window = hann(signal.astype(np.single))
-    if window.size % 2 != 0:
-        window = window[:window.size - 1]
-    spec = spectrum(window)
-    mfcc = MFCC(inputSize=len(spec))
-
-    bands, mfccs = mfcc(spec)
-
-    return np.concatenate((bands, mfccs))
+	return pool
 
 def mfcc_features_for_signals(signals):
     """Compute the MFCC feature vector for each signal, and return them in a matrix"""
