@@ -73,16 +73,15 @@ def experiment5(n_neighbors=3):
     Test with two voice samples from each of us
     """
     train_data, train_labels = files_to_mfcc_features('data/natasha_and_pardo/train')
-    print train_data.shape
-
     new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
+
+    
+
     clf = train_knn(new_train_data, new_train_labels, n_neighbors)
 
     test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
 
-
-
-    print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data), exp_labels)]
+    print [(test, exp, test == exp) for test, exp in zip(test_knn(clf, test_data, list(set(exp_labels))), exp_labels)]
 
 def experiment6():
     """
