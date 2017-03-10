@@ -13,5 +13,5 @@ def test_gmms(gmm_dict, data):
 	return [test_sample_gmms(gmm_dict, sample) for sample in data]
 	
 def test_sample_gmms(gmm_dict, sample):
-	probabilities = {label: gmm.score(sample) for label, gmm in gmm_dict.iteritems()}
+	probabilities = {label: gmm.score([sample]) for label, gmm in gmm_dict.iteritems()}
 	return max(probabilities.iterkeys(), key = lambda k: probabilities[k])

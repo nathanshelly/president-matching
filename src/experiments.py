@@ -1,5 +1,5 @@
 from mfcc import files_to_mfcc_features
-from gmm import train_gmm_set, test_gmm
+from gmm import train_gmm_set, test_gmms
 from knn import train_knn, test_knn
 import numpy as np
 
