@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Match A Professor</title>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='testing.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='button.css') }}">
+	<script src="{{ url_for('static', filename='testing.js') }}"></script>
+	<script src="{{ url_for('static', filename='Recorderjs/dist/recorder.js') }}"></script>
+</head>
+<body>
+	<div class="container">
+	<input type="checkbox" id="btn"/>
+	<label for="btn"></label>
+	<div class="time">
+		<div class="h_m"></div>
+		<div class="s_ms"></div>
+	</div>
+	</div>
+	<button onclick="startRecording(this);">record</button>
+	<button onclick="stopRecording(this);" disabled>stop</button>
+
+	<h2>Recordings</h2>
+	<ul id="recordingslist"></ul>
+
+	<h2>Log</h2>
+<pre id="log"></pre>
+</body>
+</html>
