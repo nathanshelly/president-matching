@@ -19,15 +19,15 @@ def mfcc_feature(signal):
 
 	# mfccs = essentia.array(mfccs).T
 
-    # window = hann(signal.astype(np.single))
-    # if window.size % 2 != 0:
-    #     window = window[:window.size - 1]
-    # spec = spectrum(window)
-    # mfcc = MFCC(inputSize=len(spec))
+    window = hann(signal.astype(np.single))
+    if window.size % 2 != 0:
+        window = window[:window.size - 1]
+    spec = spectrum(window)
+    mfcc = MFCC(inputSize=len(spec))
 
-    # bands, mfccs = mfcc(spec)
+    bands, mfccs = mfcc(spec)
 
-    # return np.concatenate((bands, mfccs))
+    return np.concatenate((bands, mfccs))
 
 def mfcc_features_for_signals(signals):
     """Compute the MFCC feature vector for each signal, and return them in a matrix"""
