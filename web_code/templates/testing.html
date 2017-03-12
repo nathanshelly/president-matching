@@ -5,11 +5,12 @@
 	<title>Match A Professor</title>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='testing.css') }}">
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='button.css') }}">
-	<script src="{{ url_for('static', filename='testing.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="{{ url_for('static', filename='Recorderjs/dist/recorder.js') }}"></script>
 </head>
 <body>
-	<div class="container">
+    <div id='instructions'>Click the button to start recording!</div>
+	<div class="container" id="record_button">
 	<input type="checkbox" id="btn"/>
 	<label for="btn"></label>
 	<div class="time">
@@ -17,13 +18,16 @@
 		<div class="s_ms"></div>
 	</div>
 	</div>
-	<button onclick="startRecording(this);">record</button>
-	<button onclick="stopRecording(this);" disabled>stop</button>
+    <div class="recordings_container">
+        <div class="nested_container">
+            <!--<h2>Recordings</h2>-->
+            <ul id="recordingslist"></ul>
+            <div id="testing"></div>
+        <div>
+    </div>
 
-	<h2>Recordings</h2>
-	<ul id="recordingslist"></ul>
-
-	<h2>Log</h2>
+	<!--<h2>Log</h2>-->
+    <script src="{{ url_for('static', filename='testing.js') }}"></script>
 <pre id="log"></pre>
 </body>
 </html>

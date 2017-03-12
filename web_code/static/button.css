@@ -2326,7 +2326,7 @@ body .container #btn + label:before {
   -ms-transform: translate(-6px, -6px);
   transform: translate(-6px, -6px);
   border-radius: 50%;
-  border: 6px solid #fff;
+  border: 6px solid #000;
   cursor: pointer;
 }
 body .container #btn + label:after {
