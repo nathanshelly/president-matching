@@ -2,7 +2,6 @@
 var dup_flag = true;
 var recording = false;
 var recorded_once = false;
-var instructions_text = document.getElementById("instructions");
 var audio_context;
 var recorder;
 
@@ -10,7 +9,13 @@ function startUserMedia(stream) {
   var input = audio_context.createMediaStreamSource(stream);
   // Uncomment if you want the audio to feedback directly
   //input.connect(audio_context.destination);
-  recorder = new Recorder(input);
+    config = {
+        bufferLen: 4096,
+        numChannels: 1,
+        mimeType: 'audio/wav'
+    };
+
+  recorder = new Recorder(input, config);
 }
 
 function stopRecording() {
@@ -18,7 +23,7 @@ function stopRecording() {
     createDownloadLink();
     recorder.clear();
     
-    instructions_text.innerHTML = "<h3>Click the button to start recording!<\h3>";
+    document.getElementById("instructions").innerHTML = "<h3>Click the button to start recording!<\h3>";
 }
 
 function createDownloadLink() {
@@ -33,6 +38,8 @@ function createDownloadLink() {
     $('#recordings_list li').length > 0
         ? recordings_list.replaceChild(li, recordings_list.childNodes[0]) 
         : recordings_list.appendChild(li);
+
+    return blob;
   });
 }
 
@@ -40,7 +47,7 @@ window.onload = function init() {
   try {
     // webkit shim
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
     window.URL = window.URL || window.webkitURL;
     
     audio_context = new AudioContext;
@@ -48,8 +55,7 @@ window.onload = function init() {
     alert('No web audio support in this browser!');
   }
   
-  navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
-  });
+  navigator.mediaDevices.getUserMedia({audio: true}).then(startUserMedia);
 
   document.getElementById("record_button").addEventListener("click", function() {
         if (dup_flag) {
@@ -59,9 +65,10 @@ window.onload = function init() {
             }
             else
                 recorded_once = true;
+
             if(recorder && !recording) {
                 recorder.record();
-                instructions_text.innerHTML = "<h3>Click again to stop recording!<\h3>";
+                document.getElementById("instructions").innerHTML = "<h3>Click again to stop recording!<\h3>";
             }
             
             if (recording) stopRecording();
