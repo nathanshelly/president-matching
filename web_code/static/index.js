@@ -5,34 +5,34 @@ var recorded_once = false;
 var audio_context;
 var recorder;
 
-function start_user_media(stream) {
+function startUserMedia(stream) {
   var input = audio_context.createMediaStreamSource(stream);
   // Uncomment if you want the audio to feedback directly
   //input.connect(audio_context.destination);
     config = {
-        bufferLen: 4096,
-        numChannels: 1,
-        mimeType: 'audio/wav'
+        buffer_len: 4096,
+        num_channels: 1,
+        mime_type: 'audio/wav'
     };
 
   recorder = new Recorder(input, config);
 }
 
-function start_recording() {
+function startRecording() {
     recorder.record();
     document.getElementById("instructions").innerHTML = "<h3>Click again to stop recording!<\h3>";
 }
 
-function stop_recording() {
+function stopRecording() {
     recorder.stop();
     
-    display_audio();
+    displayAudio();
     recorder.clear();
     
     document.getElementById("instructions").innerHTML = "<h3>Click the button to start recording!<\h3>";
 }
 
-function display_audio() {
+function displayAudio() {
   recorder && recorder.exportWAV(function(blob) {
     var url = URL.createObjectURL(blob);
     var li = document.createElement('li');
@@ -44,8 +44,6 @@ function display_audio() {
     $('#recordings_list li').length > 0
         ? recordings_list.replaceChild(li, recordings_list.childNodes[0]) 
         : recordings_list.appendChild(li);
-
-    return blob;
   });
 }
 
@@ -53,7 +51,6 @@ window.onload = function init() {
   try {
     // webkit shim
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
     window.URL = window.URL || window.webkitURL;
     
     audio_context = new AudioContext;
@@ -61,22 +58,22 @@ window.onload = function init() {
     alert('No web audio support in this browser!');
   }
   
-  navigator.mediaDevices.getUserMedia({audio: true}).then(start_user_media);
+  navigator.mediaDevices.getUserMedia({audio: true}).then(startUserMedia);
 
   document.getElementById("record_button").addEventListener("click", function() {
         if (dup_flag) {
             if(recorded_once) {
-                css_rule = get_CSS_rule('.recordings_paragraph');
+                css_rule = getCSSRule('.recordings_paragraph');
                 css_rule.style.display = 'initial';
             }
             else
                 recorded_once = true;
 
             if(recorder && !recording) {
-                start_recording();
+                startRecording();
             }
             
-            if (recording) stop_recording();
+            if (recording) stopRecording();
             recording = !recording;
         }
         dup_flag = !dup_flag;
@@ -84,7 +81,7 @@ window.onload = function init() {
 };
 
 // helpful utility
-function get_CSS_rule(ruleName, deleteFlag) {               // Return requested style obejct
+function getCSSRule(ruleName, deleteFlag) {               // Return requested style obejct
    ruleName=ruleName.toLowerCase();                       // Convert test string to lower case.
    if (document.styleSheets) {                            // If browser can play with stylesheets
       for (var i=0; i<document.styleSheets.length; i++) { // For each stylesheet
@@ -116,4 +113,4 @@ function get_CSS_rule(ruleName, deleteFlag) {               // Return requested 
       }                                                   // end For loop
    }                                                      // end styleSheet ability check
    return false;                                          // we found NOTHING!
-}                                                         // end get_CSS_rule 
+}                                                         // end getCSSRule 
