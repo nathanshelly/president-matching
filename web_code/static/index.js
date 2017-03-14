@@ -5,7 +5,7 @@ var recorded_once = false;
 var audio_context;
 var recorder;
 
-function startUserMedia(stream) {
+function start_user_media(stream) {
   var input = audio_context.createMediaStreamSource(stream);
   // Uncomment if you want the audio to feedback directly
   //input.connect(audio_context.destination);
@@ -18,15 +18,21 @@ function startUserMedia(stream) {
   recorder = new Recorder(input, config);
 }
 
-function stopRecording() {
-    // create WAV download link using audio data blob
-    createDownloadLink();
+function start_recording() {
+    recorder.record();
+    document.getElementById("instructions").innerHTML = "<h3>Click again to stop recording!<\h3>";
+}
+
+function stop_recording() {
+    recorder.stop();
+    
+    display_audio();
     recorder.clear();
     
     document.getElementById("instructions").innerHTML = "<h3>Click the button to start recording!<\h3>";
 }
 
-function createDownloadLink() {
+function display_audio() {
   recorder && recorder.exportWAV(function(blob) {
     var url = URL.createObjectURL(blob);
     var li = document.createElement('li');
@@ -55,23 +61,22 @@ window.onload = function init() {
     alert('No web audio support in this browser!');
   }
   
-  navigator.mediaDevices.getUserMedia({audio: true}).then(startUserMedia);
+  navigator.mediaDevices.getUserMedia({audio: true}).then(start_user_media);
 
   document.getElementById("record_button").addEventListener("click", function() {
         if (dup_flag) {
             if(recorded_once) {
-                css_rule = getCSSRule('.recordings_paragraph');
+                css_rule = get_CSS_rule('.recordings_paragraph');
                 css_rule.style.display = 'initial';
             }
             else
                 recorded_once = true;
 
             if(recorder && !recording) {
-                recorder.record();
-                document.getElementById("instructions").innerHTML = "<h3>Click again to stop recording!<\h3>";
+                start_recording();
             }
             
-            if (recording) stopRecording();
+            if (recording) stop_recording();
             recording = !recording;
         }
         dup_flag = !dup_flag;
@@ -79,7 +84,7 @@ window.onload = function init() {
 };
 
 // helpful utility
-function getCSSRule(ruleName, deleteFlag) {               // Return requested style obejct
+function get_CSS_rule(ruleName, deleteFlag) {               // Return requested style obejct
    ruleName=ruleName.toLowerCase();                       // Convert test string to lower case.
    if (document.styleSheets) {                            // If browser can play with stylesheets
       for (var i=0; i<document.styleSheets.length; i++) { // For each stylesheet
@@ -111,4 +116,4 @@ function getCSSRule(ruleName, deleteFlag) {               // Return requested st
       }                                                   // end For loop
    }                                                      // end styleSheet ability check
    return false;                                          // we found NOTHING!
-}                                                         // end getCSSRule 
+}                                                         // end get_CSS_rule 
