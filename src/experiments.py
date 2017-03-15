@@ -116,3 +116,35 @@ def experiment7():
     test_data, exp_labels = files_to_mfcc_features('data/an4_pairwise/test_full')
     
     print [(test, exp, test == exp) for test, exp in zip(test_gmms(gmm_dict, test_data), exp_labels)]
+
+def experiment8():
+    """Train a gmm with ~12 voice samples from each of 19 people and 1 set of white noise.
+
+    Test with 1-2 voice samples from each class."""
+    train_data, train_labels = files_to_mfcc_features('data/lots_of_people/train')
+    unique_train_labels = set(train_labels)
+    gmm_train_data = {label: [] for label in unique_train_labels}
+    new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
+
+    for feature_vector, label in zip(new_train_data, new_train_labels):
+        gmm_train_data[label].append(feature_vector)
+
+    gmm_dict = train_gmm_set(gmm_train_data)
+    
+    test_data, exp_labels = files_to_mfcc_features('data/lots_of_people/test')
+    
+    results = [(test, exp, test == exp) for test, exp in zip(test_gmms(gmm_dict, test_data), exp_labels)]
+    print results
+    print
+
+    for res in results:
+        if res[2]:
+            print "Matched %s to %s -- correct" % (res[1], res[0])
+        else:
+            print "Expected %s, got %s -- incorrect" % (res[1], res[0])
+
+    n_correct = len([r for r in results if r[2]])
+    n_total = len(results)
+    n_incorrect = n_total - n_correct
+    print "%d/%d correct (%0.2f)" % (n_correct, n_total, float(n_correct)/n_total)
+    print "%d/%d incorrect (%0.2f)" % (n_incorrect, n_total, float(n_incorrect)/n_total)
