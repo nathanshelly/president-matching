@@ -2,6 +2,7 @@ from mfcc import files_to_mfcc_features, unfold_matrix_list_with_labels
 from gmm import train_gmm_set, test_gmms
 from knn import train_knn, test_knn
 import numpy as np
+import utilities
 
 def experiment1(n_neighbors=5):
     """
@@ -76,6 +77,7 @@ def experiment5(n_neighbors=3):
     train_data, train_labels = files_to_mfcc_features('data/natasha_and_pardo/train')
     new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
     clf = train_knn(new_train_data, new_train_labels, n_neighbors)
+    utilities.save(clf, 'nathan_sasha_pardo_knn_clf.p')
 
     test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
 

@@ -2,9 +2,11 @@ from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 
 def train_knn(data, labels, n_neighbors=5):
-    """Train and return a KNN model"""
+    """
+    Train and return a KNN model
+    Takes 
+    """
     clf = KNeighborsClassifier(n_neighbors=n_neighbors)
-    
     clf.fit(data, labels)
     return clf
 

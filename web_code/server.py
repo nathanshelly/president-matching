@@ -4,7 +4,9 @@ import json, sys
 
 sys.path.append('../src')
 # from gmm import streaming_test_sample_gmms, test_sample_gmms
-# from mfcc import streaming_mfcc_features, mfcc_features
+from knn import test_knn
+from mfcc import streaming_mfcc_features, mfcc_features
+
 import utilities
 
 app = Flask(__name__)
