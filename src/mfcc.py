@@ -1,8 +1,9 @@
 import os
 from essentia.standard import Windowing, Spectrum, MFCC, FrameGenerator
 from essentia import Pool
-import soundfile as sf
 import numpy as np
+
+from data import load_audio
 
 def mfcc_feature(signal):
 	"""
@@ -31,10 +32,6 @@ def mfcc_features_for_signals(signals):
     is represented as a numpy array of mfcc coefficients
     """
     return np.array([mfcc_feature(signal)['mfcc_coeffs'] for signal in signals])
-
-def load_audio(dirpath):
-    files = [(os.path.join(dp, fname), os.path.basename(dp)) for dp, dn, fns in os.walk(dirpath) for fname in fns]
-    return [sf.read(fname) for fname, _ in files], [folder for _, folder in files]
 
 def files_to_mfcc_features(dirpath):
     """
