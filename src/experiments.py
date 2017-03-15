@@ -3,6 +3,8 @@ from gmm import train_gmm_set, test_gmms
 from knn import train_knn, test_knn
 import numpy as np
 
+import utilities
+
 def experiment1(n_neighbors=5):
     """
     Train a knn model on ~1000 white noise and ~1000 voice snippets.
@@ -89,9 +91,7 @@ def experiment6():
     train_data, train_labels = files_to_mfcc_features('data/natasha_and_pardo/train')
     unique_train_labels = set(train_labels)
     gmm_train_data = {label: [] for label in unique_train_labels}
-
     
-
     new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
 
     for feature_vector, label in zip(new_train_data, new_train_labels):

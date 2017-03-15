@@ -1,10 +1,6 @@
 import soundfile as sf
 import os
 
-def load_audio(dirpath):
-    files = [(os.path.join(dp, fname), os.path.basename(dp)) for dp, dn, fns in os.walk(dirpath) for fname in fns]
-    return [sf.read(fname) for fname, _ in files], [folder for _, folder in files]
-
 def chunk_audio(signal, chunk_size):
     chunks = []
     start = 0
