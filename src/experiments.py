@@ -95,6 +95,7 @@ def experiment6():
         gmm_train_data[label].append(feature_vector)
 
     gmm_dict = train_gmm_set(gmm_train_data)
+    utilities.save(gmm_dict, 'nathan_sasha_pardo_gmm_dict.p')
     
     test_data, exp_labels = files_to_mfcc_features('data/natasha_and_pardo/test')
     

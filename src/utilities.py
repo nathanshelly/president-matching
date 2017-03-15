@@ -1,5 +1,13 @@
 import cPickle as pickle
+import numpy as np
 import collections
+from scipy.io.wavfile import write
+
+def generate_white_noise(num_samples, sample_length = 4, sample_rate = 44100):
+	for i in range(num_samples):
+		data = np.random.uniform(-1, 1, sample_length*sample_rate) # 44100 random samples between -1 and 1
+		scaled = np.int16(data/np.max(np.abs(data)) * 32767)
+		write('white_noise/white_noise_' + str(i) + '.wav', sample_rate, scaled)
 
 def convert(data):
     if isinstance(data, basestring):
@@ -27,3 +35,6 @@ def load(fileName):
     pickleFile = open(fileName, 'r')
     data = pickle.load(pickleFile)
     return data
+
+if __name__ == '__main__':
+	generate_white_noise(1000)

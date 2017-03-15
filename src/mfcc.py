@@ -5,24 +5,42 @@ import soundfile as sf
 import numpy as np
 
 def mfcc_feature(signal):
-	"""
+    """
     Cuts the signal into frames and does an MFCC of each frame,
     returning a pool holding numpy arrays of coefficient vectors 
-	"""
-	hann = Windowing(type = 'hann')
-	spectrum = Spectrum()
-	mfcc = MFCC(inputSize=513)
-	
-	pool = Pool()
-	
-	for frame in FrameGenerator(signal.astype(np.single), frameSize = 1024, hopSize = 512):
-		mfcc_bands, mfcc_coeffs = mfcc(spectrum(hann(frame)))
-		pool.add('mfcc_coeffs', mfcc_coeffs)
-		pool.add('mfcc_bands', mfcc_bands)
+    """
+    hann = Windowing(type = 'hann')
+    spectrum = Spectrum()
+    mfcc = MFCC(inputSize=513)
+    
+    pool = Pool()
+    
+    for frame in FrameGenerator(signal.astype(np.single), frameSize = 1024, hopSize = 512):
+        mfcc_bands, mfcc_coeffs = mfcc(spectrum(hann(frame)))
+        pool.add('mfcc_coeffs', mfcc_coeffs)
+        pool.add('mfcc_bands', mfcc_bands)
 
     # pool currently holds mfcc_coeffs and mfcc_bands
     # as numpy arrays of coeff vectors per frame
-	return pool
+    return pool
+
+def streaming_mfcc_features(signal):
+    """
+    Cuts the signal into frames and does an MFCC of each frame,
+    returning a pool holding numpy arrays of coefficient vectors 
+    """
+    hann = Windowing(type = 'hann')
+    spectrum = Spectrum()
+    mfcc = MFCC(inputSize=513)
+
+    pool = Pool()	
+    for frame in FrameGenerator(signal.astype(np.single), frameSize = 1024, hopSize = 512):
+        _, mfcc_coeffs = mfcc(spectrum(hann(frame)))
+        pool.add('mfcc_coeffs', mfcc_coeffs)
+
+    # pool currently holds mfcc_coeffs
+    # as numpy array of coeff vectors per frame
+    return np.array(pool['mfcc_coeffs'])
 
 def mfcc_features_for_signals(signals):
     """
