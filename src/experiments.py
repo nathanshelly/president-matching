@@ -89,6 +89,9 @@ def experiment6():
     train_data, train_labels = files_to_mfcc_features('data/natasha_and_pardo/train')
     unique_train_labels = set(train_labels)
     gmm_train_data = {label: [] for label in unique_train_labels}
+
+    
+
     new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
 
     for feature_vector, label in zip(new_train_data, new_train_labels):
