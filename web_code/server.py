@@ -5,7 +5,7 @@ import json, sys
 sys.path.append('../src')
 # from gmm import streaming_test_sample_gmms, test_sample_gmms
 from knn import test_knn
-from mfcc import streaming_mfcc_features, mfcc_features
+from mfcc import streaming_mfcc_features, mfcc_feature
 
 import utilities
 
@@ -19,10 +19,10 @@ def handle_requests(ws):
         if msg:
             msg = utilities.convert(json.loads(msg))
             if msg['type'] == 'recording':
-                record_audio(ws)
+                record_audio(ws, msg)
 
 
-def record_audio(ws, ):
+def record_audio(ws, msg):
     audio = []
     recording_msg = msg
     print 'ayy recording started'
@@ -38,16 +38,16 @@ def record_audio(ws, ):
         recording_msg = utilities.convert(json.loads(recording_msg))
 
     print 'ayy recording finished'
-    ws.send('hey')
-    # ws.send(classify(audio))
+    # ws.send('hey')
+    ws.send(classify(audio))
 
 @app.route("/")
 def index():
     return render_template('index.html')
 
 def classify(signal, classifier_type = 'gmm'):
-    gmm_dict = utilities.load('../src/nathan_sasha_pardo_gmm_dict.p')
-    mfccs = mfcc_features(signal)
+    gmm_dict = utilities.load('../nathan_sasha_pardo_gmm_dict.p')
+    mfccs = mfcc_feature(signal)
     return test_sample_gmms(gmm_dict, mfccs)
 
 def streaming_classify(signal, current_probabilities, classifiers_path = 'nathan_sasha_pardo_gmm_dict.p', classifier_type = 'gmm'):
