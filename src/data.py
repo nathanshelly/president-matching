@@ -66,8 +66,4 @@ def split_professors():
         split_and_save('data/professors/%s/%s.wav' % (name, name), 'data/professors_split/%s' % name)
 
 if __name__ == "__main__":
-    # save_professors('data/professors', 'professor_gmms.p')
-    # normalize_professors()
-    # save_professors('data/professors_normalized', 'normalized_professor_gmms.p')
-    split_professors()
-    # pass
+    save_professors('data/professors', 'professor_gmms.p')

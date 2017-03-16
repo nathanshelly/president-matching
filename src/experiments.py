@@ -196,10 +196,28 @@ def experiment10():
 
     gmm_dict = utilities.load('professor_gmms.p')
 
-    # test_data, locations = files_to_features('data/sasha_rooms')
-    test_data, locations = files_to_features('data/nathan_rooms')
+    test_data, locations = files_to_features('data/sasha_rooms')
+    # test_data, locations = files_to_features('data/nathan_rooms')
 
     preds, probs = test_gmms(gmm_dict, test_data)
     
     for i in range(len(locations)):
         print locations[i], probs[i]
+        print
+
+def experiment11():
+    """Check a bunch of downloaded website recordings of myself in the same room
+    against the professors, and see if they're consistent.
+
+    Same goal as experiment 10."""
+
+    gmm_dict = utilities.load('professor_gmms.p')
+
+    test_data, labels = files_to_features('data/sasha_website')
+
+    preds, probs = test_gmms(gmm_dict, test_data)
+
+    for i in range(len(probs)):
+        print labels[i], probs[i]
+        print
+
