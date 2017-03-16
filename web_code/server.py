@@ -57,22 +57,9 @@ def classify(signal, classifier_type = 'gmm'):
     signal = normalize(signal)
     gmm_dict = utilities.load('../normalized_professor_gmms.p')
     mfccs = mfcc_feature(np.array(signal))
-    pred, probs = test_sample_gmms(gmm_dict, mfccs['mfcc_coeffs'])
+    pred, probs = test_sample_gmms(gmm_dict, mfccs['mfcc'])
     print probs
     return pred
-
-def streaming_classify(signal, current_probabilities, classifiers_path = 'nathan_sasha_pardo_gmm_dict.p', classifier_type = 'gmm'):
-    # signal is buffer of 4096 data points
-    signal = streaming_mfcc_features(signal)
-    probabilities = streaming_test_sample_gmms(utilities.load(classifiers_path), signal)
-    
-    # if not current_probabilities:
-    #     current_probabilities = {label: 0 for label in probabilities.keys()}
-    # updated_dictionary = {key: current_probabilities.get(key, 0) + probabilities.get(key, 0) for key in set(current_probabilities) & set(probabilities)}
-    
-    # .get should handle empty current_probabilities
-    updated_probabilites = {key: probabilities.get(key, 0) + current_probabilities.get(key, 0) for key in probabilities}
-    return updated_probabilites
     
 if __name__ == "__main__":
     app.run(debug = True)

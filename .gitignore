@@ -4,3 +4,4 @@ white_noise
 *.pyc
 data
 .DS_Store
+*.p

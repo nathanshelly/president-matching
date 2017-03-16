@@ -1,4 +1,5 @@
-from mfcc import files_to_mfcc_features, unfold_matrix_list_with_labels
+from mfcc import mfcc
+from features import files_to_features, unfold_matrix_list_with_labels
 from gmm import train_gmm_set
 import utilities
 
@@ -41,7 +42,7 @@ def normalize_and_save(src, dest):
 
 def save_professors(srcdir, dest):
     """Save the professor voices as a pickled GMM."""
-    train_data, train_labels = files_to_mfcc_features(srcdir)
+    train_data, train_labels = files_to_features(srcdir)
     unique_train_labels = set(train_labels)
     gmm_train_data = {label: [] for label in unique_train_labels}
     new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
@@ -58,7 +59,15 @@ def normalize_professors():
                 "nathan","nell", "pardo", "robby", "russ", "sara", "sasha", "tov"]:
         normalize_and_save('data/professors/%s/%s.wav' % (name, name), 'data/professors_normalized/%s.wav' % name)
 
+def split_professors():
+    for name in ["aravindan", "cossairt", "dinda", "fabian", "fatemah",
+                "goce", "ian", "ilya","jason", "jennie", "larry", "lincoln",
+                "nathan","nell", "pardo", "robby", "russ", "sara", "sasha", "tov"]:
+        split_and_save('data/professors/%s/%s.wav' % (name, name), 'data/professors_split/%s' % name)
+
 if __name__ == "__main__":
     # save_professors('data/professors', 'professor_gmms.p')
     # normalize_professors()
-    save_professors('data/professors_normalized', 'normalized_professor_gmms.p')
+    # save_professors('data/professors_normalized', 'normalized_professor_gmms.p')
+    # split_professors()
+    pass
