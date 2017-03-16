@@ -1,11 +1,13 @@
 from flask import Flask, request, render_template
 from flask_uwsgi_websocket import GeventWebSocket
 import json, sys
+import numpy as np
 
 sys.path.append('../src')
-# from gmm import streaming_test_sample_gmms, test_sample_gmms
+from gmm import streaming_test_sample_gmms, test_sample_gmms
 from knn import test_knn
 from mfcc import streaming_mfcc_features, mfcc_feature
+from data import normalize
 
 import utilities
 
@@ -27,7 +29,6 @@ def record_audio(ws, msg):
     recording_msg = msg
     print 'ayy recording started'
     while recording_msg['type'] == 'recording':
-        print msg['text']
         data = [msg['data'][str(x)] for x in range(len(msg['data']))]
         audio += data
 
@@ -38,7 +39,14 @@ def record_audio(ws, msg):
         recording_msg = utilities.convert(json.loads(recording_msg))
 
     print 'ayy recording finished'
-    # ws.send('hey')
+    
+    # print audio
+    # print "Mean:", np.mean(audio)
+    # print "Median:", np.median(audio)
+    # print "Max:", np.max(audio)
+    # print "Min:", np.min(audio)
+    # print "Range:", np.ptp(audio)
+
     ws.send(classify(audio))
 
 @app.route("/")
@@ -46,9 +54,12 @@ def index():
     return render_template('index.html')
 
 def classify(signal, classifier_type = 'gmm'):
-    gmm_dict = utilities.load('../nathan_sasha_pardo_gmm_dict.p')
-    mfccs = mfcc_feature(signal)
-    return test_sample_gmms(gmm_dict, mfccs)
+    signal = normalize(signal)
+    gmm_dict = utilities.load('../normalized_professor_gmms.p')
+    mfccs = mfcc_feature(np.array(signal))
+    pred, probs = test_sample_gmms(gmm_dict, mfccs['mfcc_coeffs'])
+    print probs
+    return pred
 
 def streaming_classify(signal, current_probabilities, classifiers_path = 'nathan_sasha_pardo_gmm_dict.p', classifier_type = 'gmm'):
     # signal is buffer of 4096 data points

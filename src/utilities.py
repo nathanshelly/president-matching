@@ -2,6 +2,8 @@ import cPickle as pickle
 import numpy as np
 import collections
 from scipy.io.wavfile import write
+import os
+import soundfile as sf
 
 def generate_white_noise(num_samples, sample_length = 4, sample_rate = 44100):
 	for i in range(num_samples):

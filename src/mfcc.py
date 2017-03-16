@@ -15,7 +15,7 @@ def mfcc_feature(signal):
     mfcc = MFCC(inputSize=513)
     
     pool = Pool()
-    
+
     for frame in FrameGenerator(signal.astype(np.single), frameSize = 1024, hopSize = 512):
         mfcc_bands, mfcc_coeffs = mfcc(spectrum(hann(frame)))
         pool.add('mfcc_coeffs', mfcc_coeffs)

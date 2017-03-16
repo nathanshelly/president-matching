@@ -4,8 +4,6 @@ from knn import train_knn, test_knn
 import numpy as np
 import utilities
 
-import utilities
-
 def experiment1(n_neighbors=5):
     """
     Train a knn model on ~1000 white noise and ~1000 voice snippets.
@@ -142,6 +140,48 @@ def experiment8():
     results = [(test, exp, test == exp) for test, exp in zip(test_gmms(gmm_dict, test_data), exp_labels)]
     print results
     print
+
+    for res in results:
+        if res[2]:
+            print "Matched %s to %s -- correct" % (res[1], res[0])
+        else:
+            print "Expected %s, got %s -- incorrect" % (res[1], res[0])
+
+    n_correct = len([r for r in results if r[2]])
+    n_total = len(results)
+    n_incorrect = n_total - n_correct
+    print "%d/%d correct (%0.2f)" % (n_correct, n_total, float(n_correct)/n_total)
+    print "%d/%d incorrect (%0.2f)" % (n_incorrect, n_total, float(n_incorrect)/n_total)
+
+def experiment9():
+    """Train a gmm with a bunch of samples from ~20 CS professors and Sara's kid.
+
+    Test with 1-2 voice samples from each class."""
+    train_data, train_labels = files_to_mfcc_features('data/professors_split/train')
+    unique_train_labels = set(train_labels)
+    gmm_train_data = {label: [] for label in unique_train_labels}
+    new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
+
+    for feature_vector, label in zip(new_train_data, new_train_labels):
+        gmm_train_data[label].append(feature_vector)
+
+    gmm_dict = train_gmm_set(gmm_train_data)
+    utilities.save(gmm_dict, 'professor_gmms.p')
+
+    
+    test_data, exp_labels = files_to_mfcc_features('data/professors_split/test')
+    
+    preds, probs = test_gmms(gmm_dict, test_data)
+    results = [(test, exp, test == exp) for test, exp in zip(preds, exp_labels)]
+    # print results
+    # print
+
+    # for i in range(len(probs)):
+    #     print exp_labels[i]
+    #     for prob in probs[i]:
+    #         print prob
+    #     print
+    #     print
 
     for res in results:
         if res[2]:
