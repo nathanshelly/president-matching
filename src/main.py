@@ -9,8 +9,8 @@ if __name__ == "__main__":
 	# experiment3()
 	# experiment4()
 	
-	print "Experiment 5:"
-	experiment5()
+	# print "Experiment 5:"
+	# experiment5()
 	
 	# print "Experiment 6:"
 	# experiment6()
@@ -20,3 +20,9 @@ if __name__ == "__main__":
 
 	# print "Experiment 8:"
 	# experiment8()
+
+	# print "Experiment 9:"
+	# experiment9()
+
+	print "Experiment 10:"
+	experiment10()
