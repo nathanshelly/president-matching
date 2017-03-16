@@ -28,7 +28,6 @@ def record_audio(ws, msg):
     recording_msg = msg
     while recording_msg['type'] == 'recording':
         data = [recording_msg['data'][str(x)] for x in range(len(recording_msg['data']))]
-        data = [msg['data'][str(x)] for x in range(len(msg['data']))]
         audio += data
 
         recording_msg = ws.receive()
