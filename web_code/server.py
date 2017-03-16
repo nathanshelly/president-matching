@@ -6,9 +6,9 @@ import numpy as np
 sys.path.append('../src')
 from gmm import streaming_test_sample_gmms, test_sample_gmms
 from knn import test_knn
-from mfcc import streaming_mfcc_features, mfcc_feature
+from features import compute_features
+from mfcc import mfcc, filtered_mfcc
 from data import normalize
-
 import utilities
 
 app = Flask(__name__)
@@ -53,11 +53,14 @@ def record_audio(ws, msg):
 def index():
     return render_template('index.html')
 
-def classify(signal, classifier_type = 'gmm'):
+def classify(signal):
     signal = normalize(signal)
     gmm_dict = utilities.load('../normalized_professor_gmms.p')
-    mfccs = mfcc_feature(np.array(signal))
-    pred, probs = test_sample_gmms(gmm_dict, mfccs['mfcc'])
+
+    mfccs = compute_features(np.array(signal), features=[mfcc])
+    
+    pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
+    
     print probs
     return pred
     

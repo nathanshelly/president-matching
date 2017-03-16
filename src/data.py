@@ -1,4 +1,4 @@
-from mfcc import mfcc
+from mfcc import mfcc, filtered_mfcc
 from features import files_to_features, unfold_matrix_list_with_labels
 from gmm import train_gmm_set
 import utilities
@@ -42,7 +42,7 @@ def normalize_and_save(src, dest):
 
 def save_professors(srcdir, dest):
     """Save the professor voices as a pickled GMM."""
-    train_data, train_labels = files_to_features(srcdir)
+    train_data, train_labels = files_to_features(srcdir, features=[mfcc])
     unique_train_labels = set(train_labels)
     gmm_train_data = {label: [] for label in unique_train_labels}
     new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
@@ -69,5 +69,5 @@ if __name__ == "__main__":
     # save_professors('data/professors', 'professor_gmms.p')
     # normalize_professors()
     # save_professors('data/professors_normalized', 'normalized_professor_gmms.p')
-    # split_professors()
-    pass
+    split_professors()
+    # pass

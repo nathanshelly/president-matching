@@ -6,7 +6,7 @@ import numpy as np
 from utilities import load_audio
 from mfcc import mfcc
 
-def compute_features(signal, features):
+def compute_features(signal, features=[mfcc]):
     """Compute features frame-by-frame on a signal.
     
     Features is a list of functions for generating features."""
