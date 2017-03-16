@@ -159,22 +159,11 @@ def experiment9():
 
     Test with 1-2 voice samples from each class."""
     gmm_dict = utilities.load('professor_gmms.p')
-    # utilities.save(gmm_dict, 'professor_gmms.p')
-
     
-    test_data, exp_labels = files_to_features('data/professors_split/test')
+    test_data, exp_labels = files_to_features('data/professors_split')
     
     preds, probs = test_gmms(gmm_dict, test_data)
     results = [(test, exp, test == exp) for test, exp in zip(preds, exp_labels)]
-    # print results
-    # print
-
-    # for i in range(len(probs)):
-    #     print exp_labels[i]
-    #     for prob in probs[i]:
-    #         print prob
-    #     print
-    #     print
 
     for res in results:
         if res[2]:
@@ -197,12 +186,17 @@ def experiment10():
     gmm_dict = utilities.load('professor_gmms.p')
 
     test_data, locations = files_to_features('data/sasha_rooms')
-    # test_data, locations = files_to_features('data/nathan_rooms')
-
     preds, probs = test_gmms(gmm_dict, test_data)
-    
+    print "Sasha classifications:\n"
     for i in range(len(locations)):
-        print locations[i], probs[i]
+        print locations[i], probs[i][-6:]
+        print
+
+    test_data, locations = files_to_features('data/nathan_rooms')
+    preds, probs = test_gmms(gmm_dict, test_data)
+    print "Nathan classifications:\n"
+    for i in range(len(locations)):
+        print locations[i], probs[i][-6:]
         print
 
 def experiment11():

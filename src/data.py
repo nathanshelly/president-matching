@@ -60,10 +60,11 @@ def normalize_professors():
         normalize_and_save('data/professors/%s/%s.wav' % (name, name), 'data/professors_normalized/%s.wav' % name)
 
 def split_professors():
-    for name in ["aravindan", "cossairt", "dinda", "fabian", "fatemah",
+    for name in ["aravindan", "cossairt", "dinda", "downey", "fabian", "fatemah",
                 "goce", "ian", "ilya","jason", "jennie", "larry", "lincoln",
                 "nathan","nell", "pardo", "robby", "russ", "sara", "sasha", "tov"]:
         split_and_save('data/professors/%s/%s.wav' % (name, name), 'data/professors_split/%s' % name)
 
 if __name__ == "__main__":
-    save_professors('data/professors', 'professor_gmms.p')
+    # save_professors('data/professors', 'professor_gmms.p')
+    split_professors()
