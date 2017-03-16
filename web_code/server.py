@@ -1,11 +1,12 @@
 from flask import Flask, request, render_template
 from flask_uwsgi_websocket import GeventWebSocket
 import json, sys
+import numpy as np
 
 sys.path.append('../src')
 # from gmm import streaming_test_sample_gmms, test_sample_gmms
-from knn import test_knn
-from mfcc import streaming_mfcc_features, mfcc_feature
+# from knn import test_knn
+# from mfcc import streaming_mfcc_features, mfcc_feature
 
 import utilities
 
@@ -21,14 +22,11 @@ def handle_requests(ws):
             if msg['type'] == 'recording':
                 record_audio(ws, msg)
 
-
 def record_audio(ws, msg):
     audio = []
     recording_msg = msg
-    print 'ayy recording started'
     while recording_msg['type'] == 'recording':
-        print msg['text']
-        data = [msg['data'][str(x)] for x in range(len(msg['data']))]
+        data = [recording_msg['data'][str(x)] for x in range(len(recording_msg['data']))]
         audio += data
 
         recording_msg = ws.receive()
@@ -36,19 +34,29 @@ def record_audio(ws, msg):
             recording_msg = ws.receive()
 
         recording_msg = utilities.convert(json.loads(recording_msg))
-
-    print 'ayy recording finished'
-    # ws.send('hey')
-    ws.send(classify(audio))
+    
+    print audio
+    # let s = Math.max(-1, Math.min(1, input[i]));
+    # output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+        
+    # ws.send(classify(audio))
+    ws.send('hi')
 
 @app.route("/")
 def index():
     return render_template('index.html')
 
 def classify(signal, classifier_type = 'gmm'):
-    gmm_dict = utilities.load('../nathan_sasha_pardo_gmm_dict.p')
     mfccs = mfcc_feature(signal)
-    return test_sample_gmms(gmm_dict, mfccs)
+    
+    if classifier_type == 'knn':
+        pass
+        # classification = test_knn()
+    else:
+        gmm_dict = utilities.load('../nathan_sasha_pardo_gmm_dict.p')
+        classification = test_sample_gmms(gmm_dict, mfccs)
+    
+    return 
 
 def streaming_classify(signal, current_probabilities, classifiers_path = 'nathan_sasha_pardo_gmm_dict.p', classifier_type = 'gmm'):
     # signal is buffer of 4096 data points

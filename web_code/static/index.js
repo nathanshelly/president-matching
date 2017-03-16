@@ -50,8 +50,8 @@ window.onload = function init() {
         // webkit shim
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         window.URL = window.URL || window.webkitURL;
-
         audio_context = new AudioContext;
+
     } catch (e) {
         alert('No web audio support in this browser!');
     }

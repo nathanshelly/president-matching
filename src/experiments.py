@@ -4,8 +4,6 @@ from knn import train_knn, test_knn
 import numpy as np
 import utilities
 
-import utilities
-
 def experiment1(n_neighbors=5):
     """
     Train a knn model on ~1000 white noise and ~1000 voice snippets.
