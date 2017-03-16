@@ -21,5 +21,8 @@ if __name__ == "__main__":
 	# print "Experiment 8:"
 	# experiment8()
 
-	print "Experiment 9:"
-	experiment9()
+	# print "Experiment 9:"
+	# experiment9()
+
+	print "Experiment 10:"
+	experiment10()

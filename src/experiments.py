@@ -158,15 +158,7 @@ def experiment9():
     """Train a gmm with a bunch of samples from ~20 CS professors and Sara's kid.
 
     Test with 1-2 voice samples from each class."""
-    train_data, train_labels = files_to_features('data/professors_split/train')
-    unique_train_labels = set(train_labels)
-    gmm_train_data = {label: [] for label in unique_train_labels}
-    new_train_data, new_train_labels = unfold_matrix_list_with_labels(train_data, train_labels)
-
-    for feature_vector, label in zip(new_train_data, new_train_labels):
-        gmm_train_data[label].append(feature_vector)
-
-    gmm_dict = train_gmm_set(gmm_train_data)
+    gmm_dict = utilities.load('professor_gmms.p')
     # utilities.save(gmm_dict, 'professor_gmms.p')
 
     
@@ -195,3 +187,19 @@ def experiment9():
     n_incorrect = n_total - n_correct
     print "%d/%d correct (%0.2f)" % (n_correct, n_total, float(n_correct)/n_total)
     print "%d/%d incorrect (%0.2f)" % (n_incorrect, n_total, float(n_incorrect)/n_total)
+
+def experiment10():
+    """Check a bunch of local recordings of myself in different rooms against the professors,
+    and see if they're consistent.
+
+    Parsing out if trouble is matching different recording scenarios vs jumbled on server."""
+
+    gmm_dict = utilities.load('professor_gmms.p')
+
+    # test_data, locations = files_to_features('data/sasha_rooms')
+    test_data, locations = files_to_features('data/nathan_rooms')
+
+    preds, probs = test_gmms(gmm_dict, test_data)
+    
+    for i in range(len(locations)):
+        print locations[i], probs[i]

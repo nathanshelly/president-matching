@@ -12,7 +12,7 @@ def mfcc(frame, hopSize=512):
     spectrum = Spectrum()
     mfcc = MFCC(inputSize=hopSize+1)
 
-    cs, bs = mfcc(spectrum(hann(frame)))
+    bs, cs = mfcc(spectrum(hann(frame)))
     # return np.concatenate((cs, bs))
     return cs
 
