@@ -16,6 +16,7 @@ ws = GeventWebSocket(app)
 
 @ws.route("/websocket")
 def handle_requests(ws):
+    print ws.timeout
     while ws.connected:
         msg = ws.receive()
         if msg:
@@ -27,26 +28,19 @@ def record_audio(ws, msg):
     audio = []
     recording_msg = msg
     while recording_msg['type'] == 'recording':
+        ws.send('None')
         data = [recording_msg['data'][str(x)] for x in range(len(recording_msg['data']))]
         audio += data
 
         recording_msg = ws.receive()
         while not recording_msg:
+            ws.send('None')
             recording_msg = ws.receive()
 
         recording_msg = utilities.convert(json.loads(recording_msg))
     
-    print audio
-    # let s = Math.max(-1, Math.min(1, input[i]));
-    # output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-        
-    # print audio
-    # print "Mean:", np.mean(audio)
-    # print "Median:", np.median(audio)
-    # print "Max:", np.max(audio)
-    # print "Min:", np.min(audio)
-    # print "Range:", np.ptp(audio)
-    ws.send(classify(audio))
+    ws.send('ayyyy recording finished')
+    # ws.send(classify(audio))
 
 @app.route("/")
 def index():

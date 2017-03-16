@@ -266,10 +266,12 @@ var Recorder = exports.Recorder = function () {
                     console.log('socket opened');
                 };
 
-                ws.onmessage = function (message) {
+                ws.onmessage = function(message) {
                     // processServerReturn(message);
-                    console.log('received a message');
-                    console.log(message);
+                    if(message.data != 'None') {
+                        console.log('received a message');
+                        console.log(message);
+                    }
                 };
 
                 ws.onerror = function (error_event) {
