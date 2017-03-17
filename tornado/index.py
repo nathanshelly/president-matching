@@ -8,11 +8,7 @@ from gmm import test_sample_gmms
 from features import compute_features
 import utilities
 
-enable_pretty_logging()
-audio = []
-
-
-class audioSocket(websocket.WebSocketHandler):
+class audioSocket(websocket.WebSocketHandler):    
     def check_origin(self, origin):
         return True
 
@@ -35,6 +31,7 @@ class audioSocket(websocket.WebSocketHandler):
         elif message['text'] == 'done':
             self.write_message('ayyyy recording finished')
             self.write_message(classify(audio))
+            audio = []
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -48,6 +45,9 @@ def make_app():
     return tornado.web.Application(handlers, **settings)
 
 if __name__ == "__main__":
+    enable_pretty_logging()
+    audio = []    
+
     app = make_app()
 
     app.listen(443,
