@@ -20,7 +20,7 @@ class audioSocket(websocket.WebSocketHandler):
         if message:
             message = utilities.convert(json.loads(message))
             if message['type'] == 'recording':
-                print message
+                print message.keys()
                 self.record_audio(message)
 
     def on_close(self):
@@ -32,6 +32,7 @@ class audioSocket(websocket.WebSocketHandler):
             self.audio += data
         elif message['text'] == 'done':
             self.write_message('ayyyy recording finished')
+            print audio
             self.write_message(self.classify(self.audio))
             self.audio = []
 
