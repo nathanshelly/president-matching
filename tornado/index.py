@@ -31,8 +31,17 @@ class audioSocket(websocket.WebSocketHandler):
             self.audio += data
         elif message['text'] == 'done':
             self.write_message('ayyyy recording finished')
-            self.write_message(classify(self.audio))
+            self.write_message(self.classify(self.audio))
             self.audio = []
+
+    def classify(self, signal):
+        gmm_dict = utilities.load('../professor_gmms.p')
+
+        mfccs = compute_features(np.array(signal), features=[mfcc])
+        pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
+
+        print probs
+        return pred
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -57,12 +66,3 @@ if __name__ == "__main__":
             "keyfile": "map.key", })
 
     tornado.ioloop.IOLoop.current().start()
-
-def classify(signal):
-    gmm_dict = utilities.load('../professor_gmms.p')
-
-    mfccs = compute_features(np.array(signal), features=[mfcc])
-    pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
-
-    print probs
-    return pred
