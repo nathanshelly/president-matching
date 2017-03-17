@@ -4,7 +4,7 @@ Built by Nathan Shelly and Sasha Weiss, for EECS 352 at Northwestern University,
 ## Voice Matching
 Which Professor Are You investigates voice-similarity matching. Specifically, we investigated various audio features that could be used to match a speaker to others they "sound the most like". As an application of this project, our project records a speaker, and presents them with the Northwestern EECS professor their voice most closely resembles.
 
-Our implementation relies on [MFCCs][4], which it uses as features for training and testing using a [GMM classifier][5]. You can see it live at our [project page][6]!
+Our implementation relies on [MFCCs][4], which it uses as features for training and testing using a [GMM classifier][5]. You can see it live at our [project page][6], and read our report [here][7]!
 
 ## Dependencies
 Most dependencies are reflected in `requirements.txt`. To install using Pip, run `pip install -r requirements.txt`.
@@ -23,3 +23,4 @@ To run this project in a [virtual environment][2], it is necessary to build/inst
 [4]: https://www.wikiwand.com/en/Mel-frequency_cepstrum
 [5]: http://scikit-learn.org/stable/modules/mixture.html
 [6]: https://whichprof.me
+[7]: https://docs.google.com/presentation/d/1xWapGB6mQnUaBJ-nfJyglCsV5nFxxiZ-G2ivald6820/edit?usp=sharing
