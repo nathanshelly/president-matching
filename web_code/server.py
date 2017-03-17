@@ -48,7 +48,7 @@ def index():
 
 def classify(signal):
     signal = normalize(signal)
-    gmm_dict = utilities.load('../normalized_professor_gmms.p')
+    gmm_dict = utilities.load('../professor_gmms.p')
 
     mfccs = compute_features(np.array(signal), features=[mfcc])
     

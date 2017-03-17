@@ -254,8 +254,8 @@ var Recorder = exports.Recorder = function () {
             }
 
             function initWebSocket() {
-								ws = new WebSocket('wss://35.187.107.203:8181/websocket')
-
+                // temporary ip address during local testing
+                ws = new WebSocket('wss://35.187.107.203/websocket');
                 ws.binaryType = 'arraybuffer';
 
                 ws.onclose = function (close_event) {
