@@ -9,8 +9,8 @@ from features import compute_features
 import utilities
 
 class audioSocket(websocket.WebSocketHandler):    
-        audio = []
-        def check_origin(self, origin):
+    audio = []
+    def check_origin(self, origin):
         return True
 
     def open(self):
