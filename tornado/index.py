@@ -16,20 +16,20 @@ audio = []
 
 
 class audioSocket(websocket.WebSocketHandler):
-	def check_origin(self, origin):
-		return True
+    def check_origin(self, origin):
+        return True
 
-	def open(self):
-		print 'websocket opened'
+    def open(self):
+        print 'websocket opened'
 
-	def on_message(self, message):
+    def on_message(self, message):
         if message:
             message = utilities.convert(json.loads(message))
             if msg['type'] == 'recording':
                 record_audio(self, message)
 
-	def on_close(self):
-		print 'websocket closed'
+    def on_close(self):
+        print 'websocket closed'
 
     def record_audio(self, message):
         if message['text'] == 'chunk':
@@ -40,25 +40,25 @@ class audioSocket(websocket.WebSocketHandler):
             self.write_message(classify(audio))
 
 class MainHandler(tornado.web.RequestHandler):
-	def get(self):
-		self.render("templates/index.html")
+    def get(self):
+        self.render("templates/index.html")
 
 def make_app():
-	handlers = [(r"/", MainHandler), (r"/websocket", audioSocket)]
-	settings = {
-			"static_path": "static"
-	}
-	return tornado.web.Application(handlers, **settings)
+    handlers = [(r"/", MainHandler), (r"/websocket", audioSocket)]
+    settings = {
+            "static_path": "static"
+    }
+    return tornado.web.Application(handlers, **settings)
 
 if __name__ == "__main__":
-	app = make_app()
+    app = make_app()
 
-	app.listen(443,
+    app.listen(443,
         ssl_options={
             "certfile": "map.crt",
             "keyfile": "map.key", })
 
-	tornado.ioloop.IOLoop.current().start()
+    tornado.ioloop.IOLoop.current().start()
 
 def classify(signal):
     signal = normalize(signal)
