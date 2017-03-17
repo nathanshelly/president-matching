@@ -16,7 +16,7 @@ ul {
 
 #recordings_container {
     text-align: center;
-    margin: 50px;
+    margin: 50px 50px 10px 50px;
 }
 
 .results_text {
@@ -32,4 +32,11 @@ ul {
 #instructions {
     text-align: center;
     padding: 20px 0 0 0;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -250px;
 }
