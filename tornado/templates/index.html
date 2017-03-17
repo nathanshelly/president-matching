@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Match A Professor</title>
+	<link rel=stylesheet type=text/css href="{{ static_url('index.css') }}">
+	<link rel=stylesheet type=text/css href="{{ static_url('button.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="{{ static_url('recorder.js') }}"></script>
+</head>
+<body>
+    <h2>Match a Prof</h2>
+    <h3>Record your voice to see which Northwestern CS professor you sound like!</h3>
+    <div id='instructions'><h3>Click the button to start recording</h3></div>
+    <div class="container" id="record_button">
+        <input type="checkbox" id="btn"/>
+        <label for="btn"></label>
+        <div class="time">
+            <div class="h_m"></div>
+            <div class="s_ms"></div>
+        </div>
+	</div>
+    <div id="recordings_container">
+        <p class='recordings_paragraph'>What a beautiful voice:</p>
+        <!--<h2>Recordings</h2>-->
+        <ul id="recordings_list"></ul>
+
+        <p class='recordings_paragraph'>Let's see how you match up with professors!</p>
+    </div>
+
+	<!--<h2>Log</h2>-->
+    <script src="{{ static_url('index.js') }}"></script>
+<pre id="log"></pre>
+</body>
+</html>
