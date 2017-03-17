@@ -5,8 +5,6 @@
 	<title>Match A Professor</title>
 	<link rel=stylesheet type=text/css href="{{ static_url('index.css') }}">
 	<link rel=stylesheet type=text/css href="{{ static_url('button.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="{{ static_url('recorder.js') }}"></script>
 </head>
 <body>
     <h2>Match a Prof</h2>
@@ -21,14 +19,16 @@
         </div>
 	</div>
     <div id="recordings_container">
-        <p class='recordings_paragraph'>What a beautiful voice:</p>
-        <!--<h2>Recordings</h2>-->
+        <p class='results_text'>What a beautiful voice:</p>
         <ul id="recordings_list"></ul>
-
-        <p class='recordings_paragraph'>Let's see how you match up with professors!</p>
+        <p class='results_text'>Let's see how you match up with professors!</p>
+        <h3 id='prediction'></h3>
+        <p class='results_text'>Below are your 5 closest matches, a lower negative number means a closer match</p>
     </div>
-
-	<!--<h2>Log</h2>-->
+    <div id='results'>
+        <ul id="predictions_list"></ul>
+    </div>
+    <script src="{{ static_url('recorder.js') }}"></script>
     <script src="{{ static_url('index.js') }}"></script>
 <pre id="log"></pre>
 </body>

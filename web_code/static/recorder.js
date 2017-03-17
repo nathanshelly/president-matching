@@ -49,7 +49,7 @@ var Recorder = exports.Recorder = function () {
         };
         this.callbacks = {
             getBuffer: [],
-            exportWAV: []
+            exportWAV: [],
         };
 
         Object.assign(this.config, cfg);
@@ -90,7 +90,7 @@ var Recorder = exports.Recorder = function () {
                         record(e.data.buffer);
                         break;
                     case 'done_recording':
-                        finishRecording(e);
+                        sendEndMessage(e);
                         break;
                     case 'close_websocket':
                         closeWebSocket();
@@ -133,7 +133,7 @@ var Recorder = exports.Recorder = function () {
                 ws.close();
             }
 
-            function finishRecording(e) {
+            function sendEndMessage(e) {
                 var msg = {
                     type: "recording",
                     text: 'done'
@@ -156,6 +156,10 @@ var Recorder = exports.Recorder = function () {
                 var audio_blob = new Blob([dataview], { type: type });
 
                 this.postMessage({ command: 'exportWAV', data: audio_blob });
+            }
+
+            function getProcessingResults() {
+
             }
 
             function getBuffer() {
@@ -252,8 +256,11 @@ var Recorder = exports.Recorder = function () {
                 return view;
             }
 
+            function passAlongData(data) {
+                this.postMessage({command: 'displayPredictions', data: data});
+            }
+
             function initWebSocket() {
-                // temporary ip address during local testing
                 ws = new WebSocket('wss://35.187.107.203/websocket');
                 ws.binaryType = 'arraybuffer';
 
@@ -266,10 +273,13 @@ var Recorder = exports.Recorder = function () {
                 };
 
                 ws.onmessage = function(message) {
-                    // processServerReturn(message);
                     if(message.data != 'None') {
                         console.log('received a message');
                         console.log(message);
+                        decoded_data = JSON.parse(message.data)
+                        if(decoded_data['type'] == 'result') {
+                            passAlongData(decoded_data);
+                        }
                     }
                 };
 
@@ -289,9 +299,15 @@ var Recorder = exports.Recorder = function () {
         });
 
         this.worker.onmessage = function (e) {
-            var cb = _this.callbacks[e.data.command].pop();
-            if (typeof cb == 'function') {
-                cb(e.data.data);
+            if(e.data.command == 'displayPredictions') {
+                console.log(this);
+                _this.displayPredictions(e.data.data);
+            }
+            else {
+                var cb = _this.callbacks[e.data.command].pop();
+                if (typeof cb == 'function') {
+                    cb(e.data.data);
+                }
             }
         };
     }
@@ -342,6 +358,35 @@ var Recorder = exports.Recorder = function () {
                 command: 'exportWAV',
                 type: mime_type
             });
+        }
+    }, {
+        key: 'displayPredictions',
+        value: function displayPredictions(data) {
+            var top_five = data.probs.slice(-5).reverse();
+
+            var prediction = document.getElementById('prediction');
+            prediction.innerHTML = '</h3>Congratulations, you sound most like: ' + this.capitalizeFirstLetter(data.pred) + '</h3>'
+
+            var predictions_node = document.getElementById('predictions_list');
+            // if there are results currently, remove them
+            while (predictions_node.firstChild) {
+                predictions_node.removeChild(predictions_node.firstChild);
+            }
+
+            for (var index in top_five) {
+                var temp_node = document.createElement('li');
+                temp_node.innerText = this.capitalizeFirstLetter(top_five[index][0]) + ': ' + top_five[index][1].toFixed(2) + '%'
+                predictions_node.appendChild(temp_node);
+            }
+
+            console.log(data);
+            console.log(prediction);
+            console.log(top_five);
+        }
+    }, {
+        key: 'capitalizeFirstLetter',
+        value: function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
         }
     }]);
 

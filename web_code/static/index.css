@@ -1,3 +1,9 @@
+body {
+  text-align: center;
+  overflow: hidden;
+  background: #97a9c6;
+}
+
 ul {
     list-style: none;
     -webkit-padding-start: 0px;
@@ -13,9 +19,14 @@ ul {
     margin: 50px;
 }
 
-.recordings_paragraph {
+.results_text {
     display: none;
-    /*margin: 25px 0;*/
+}
+
+#results {
+    text-align: left;
+    margin: auto;
+    max-width: 200px;
 }
 
 #instructions {

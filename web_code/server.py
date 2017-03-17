@@ -30,17 +30,17 @@ class audioSocket(websocket.WebSocketHandler):
             data = [message['data'][str(x)] for x in range(len(message['data']))]
             self.audio += data
         elif message['text'] == 'done':
-            self.write_message(self.classify(self.audio))
+            self.write_message(json.dumps(self.classify(self.audio)))
             self.audio = []
 
     def classify(self, signal):
-        gmm_dict = utilities.load('../professor_gmms.p')
+        gmm_dict = utilities.load('../professor_gmms_no_us.p')
 
         mfccs = compute_features(np.array(signal))
         pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
 
         print probs
-        return pred
+        return {'type': 'result', 'pred': pred, 'probs': probs}
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -55,13 +55,6 @@ def make_app():
 
 if __name__ == "__main__":
     enable_pretty_logging()
-    audio = []    
-
     app = make_app()
-
-    app.listen(443,
-        ssl_options={
-            "certfile": "map.crt",
-            "keyfile": "map.key", })
-
+    app.listen(443, ssl_options={"certfile": "map.crt", "keyfile": "map.key", })
     tornado.ioloop.IOLoop.current().start()

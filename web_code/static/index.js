@@ -6,8 +6,6 @@ var recorder;
 
 function startUserMedia(stream) {
     var input = audio_context.createMediaStreamSource(stream);
-    // Uncomment if you want the audio to feedback directly
-    //input.connect(audio_context.destination);
     config = {
         buffer_len: 4096,
         num_channels: 1,
@@ -24,10 +22,14 @@ function startRecording() {
 function stopRecording() {
     recorder.stop();
 
-    displayAudio();
+    processRecording();
     recorder.clear();
 
     document.getElementById("instructions").innerHTML = "<h3>Click the button to start a new recording<\h3>";
+}
+
+function processRecording() {
+    displayAudio();
 }
 
 function displayAudio() {
@@ -39,7 +41,7 @@ function displayAudio() {
         au.controls = true;
         au.src = url;
         li.appendChild(au);
-        $('#recordings_list li').length > 0
+        recordings_list.childElementCount > 0
             ? recordings_list.replaceChild(li, recordings_list.childNodes[0])
             : recordings_list.appendChild(li);
     });
@@ -58,12 +60,11 @@ window.onload = function init() {
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then(startUserMedia);
 		
-
     document.getElementById("record_button").addEventListener("click", function () {
         if (dup_flag) {
             !recorded_once
                 ? recorded_once = true
-                : getCSSRule('.recordings_paragraph').style.display = 'initial';
+                : getCSSRule('.results_text').style.display = 'initial';
 
             recorder.recording
                 ? stopRecording()
