@@ -4,11 +4,8 @@ from tornado import websocket
 import numpy as np
 
 sys.path.append('../src')
-from gmm import streaming_test_sample_gmms, test_sample_gmms
-from knn import test_knn
+from gmm import test_sample_gmms
 from features import compute_features
-from mfcc import mfcc, filtered_mfcc
-from data import normalize
 import utilities
 
 enable_pretty_logging()
@@ -25,8 +22,8 @@ class audioSocket(websocket.WebSocketHandler):
     def on_message(self, message):
         if message:
             message = utilities.convert(json.loads(message))
-            if msg['type'] == 'recording':
-                record_audio(self, message)
+            if message['type'] == 'recording':
+                self.record_audio(message)
 
     def on_close(self):
         print 'websocket closed'
@@ -61,7 +58,6 @@ if __name__ == "__main__":
     tornado.ioloop.IOLoop.current().start()
 
 def classify(signal):
-    signal = normalize(signal)
     gmm_dict = utilities.load('../professor_gmms.p')
 
     mfccs = compute_features(np.array(signal), features=[mfcc])
