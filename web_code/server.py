@@ -1,61 +1,67 @@
-from flask import Flask, request, render_template
-from flask_uwsgi_websocket import GeventWebSocket
-import json, sys
+import tornado.ioloop, tornado.web, os, json, sys
+from tornado.log import enable_pretty_logging
+from tornado import websocket
 import numpy as np
 
 sys.path.append('../src')
-from gmm import streaming_test_sample_gmms, test_sample_gmms
-from knn import test_knn
+from gmm import test_sample_gmms
 from features import compute_features
-from mfcc import mfcc, filtered_mfcc
-from data import normalize
 import utilities
 
-app = Flask(__name__)
-ws = GeventWebSocket(app)
-
-@ws.route("/websocket")
-def handle_requests(ws):
-    print ws.timeout
-    while ws.connected:
-        msg = ws.receive()
-        if msg:
-            msg = utilities.convert(json.loads(msg))
-            if msg['type'] == 'recording':
-                record_audio(ws, msg)
-
-def record_audio(ws, msg):
+class audioSocket(websocket.WebSocketHandler):    
     audio = []
-    recording_msg = msg
-    while recording_msg['type'] == 'recording':
-        ws.send('None')
-        data = [recording_msg['data'][str(x)] for x in range(len(recording_msg['data']))]
-        audio += data
+    def check_origin(self, origin):
+        return True
 
-        recording_msg = ws.receive()
-        while not recording_msg:
-            ws.send('None')
-            recording_msg = ws.receive()
+    def open(self):
+        print 'websocket opened'
 
-        recording_msg = utilities.convert(json.loads(recording_msg))
-    
-    ws.send('ayyyy recording finished')
-    # ws.send(classify(audio))
+    def on_message(self, message):
+        if message:
+            message = utilities.convert(json.loads(message))
+            if message['type'] == 'recording':
+                self.record_audio(message)
 
-@app.route("/")
-def index():
-    return render_template('index.html')
+    def on_close(self):
+        print 'websocket closed'
 
-def classify(signal):
-    signal = normalize(signal)
-    gmm_dict = utilities.load('../professor_gmms.p')
+    def record_audio(self, message):
+        if message['text'] == 'chunk':
+            data = [message['data'][str(x)] for x in range(len(message['data']))]
+            self.audio += data
+        elif message['text'] == 'done':
+            self.write_message(self.classify(self.audio))
+            self.audio = []
 
-    mfccs = compute_features(np.array(signal), features=[mfcc])
-    
-    pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
-    
-    print probs
-    return pred
-    
+    def classify(self, signal):
+        gmm_dict = utilities.load('../professor_gmms.p')
+
+        mfccs = compute_features(np.array(signal))
+        pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
+
+        print probs
+        return pred
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("templates/index.html")
+
+def make_app():
+    handlers = [(r"/", MainHandler), (r"/websocket", audioSocket)]
+    settings = {
+            "static_path": "static"
+    }
+    return tornado.web.Application(handlers, **settings)
+
 if __name__ == "__main__":
-    app.run(debug = True)
+    enable_pretty_logging()
+    audio = []    
+
+    app = make_app()
+
+    app.listen(443,
+        ssl_options={
+            "certfile": "map.crt",
+            "keyfile": "map.key", })
+
+    tornado.ioloop.IOLoop.current().start()

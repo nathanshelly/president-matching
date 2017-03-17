@@ -57,6 +57,7 @@ window.onload = function init() {
     }
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then(startUserMedia);
+		
 
     document.getElementById("record_button").addEventListener("click", function () {
         if (dup_flag) {
