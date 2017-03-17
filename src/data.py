@@ -1,5 +1,5 @@
 from mfcc import mfcc, filtered_mfcc
-from features import files_to_features, unfold_matrix_list_with_labels
+from features import files_to_features, unfold_matrix_list_with_labels, knn_train_features
 from gmm import train_gmm_set
 import utilities
 
@@ -17,17 +17,22 @@ def chunk_audio(signal, chunk_size):
     return chunks
 
 def split_and_save(src, destdir, chunk_length=3):
-    """Load the file given in srcpath, split it up, into sections of duration chunk_length,
+    """Load the file given in srcpath, split it up into a big and little chunk,
     and save the pieces to destpath."""
     signal, sr = sf.read(src)
 
     if not os.path.exists(destdir):
         os.makedirs(destdir)
 
-    chunks = chunk_audio(signal, sr * chunk_length)
+    basename = os.path.basename(src)
 
-    for i in range(len(chunks)):
-        sf.write(os.path.join(destdir, "chunk_%d.wav" % i), chunks[i], sr)
+    n_chunks = sr * chunk_length
+
+    little_chunk = signal[:n_chunks]
+    big_chunk = signal[n_chunks:]
+
+    sf.write(os.path.join(destdir, "big_%s" % basename), big_chunk, sr)
+    sf.write(os.path.join(destdir, "little_%s" % basename), little_chunk, sr)
 
 def normalize(signal):
     return signal / np.ptp(signal)
@@ -40,7 +45,7 @@ def normalize_and_save(src, dest):
 
     sf.write(dest, norm_sig, sr)
 
-def save_professors(srcdir, dest):
+def save_professor_gmms(srcdir, dest):
     """Save the professor voices as a pickled GMM."""
     train_data, train_labels = files_to_features(srcdir, features=[mfcc])
     unique_train_labels = set(train_labels)
@@ -65,6 +70,12 @@ def split_professors():
                 "nathan","nell", "pardo", "robby", "russ", "sara", "sasha", "tov"]:
         split_and_save('data/professors/%s/%s.wav' % (name, name), 'data/professors_split/%s' % name)
 
+def save_professor_knn_features(srcdir, dest):
+    train_data, train_labels = knn_train_features(srcdir)
+
+    utilities.save((train_data, train_labels), dest)
+
 if __name__ == "__main__":
-    # save_professors('data/professors', 'professor_gmms.p')
-    split_professors()
+    save_professor_gmms('data/professors_split/train', 'professor_gmms_train.p')
+    # save_professor_knn_features('data/professors_split/train', 'professor_knn_features_train.p')
+    # split_professors()

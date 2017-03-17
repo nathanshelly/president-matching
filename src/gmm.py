@@ -19,6 +19,3 @@ def test_sample_gmms(gmm_dict, signal):
     # generates probabilities for each 
     probabilities = {label: gmm.score(signal) for label, gmm in gmm_dict.iteritems()}
     return max(probabilities.iterkeys(), key = lambda k: probabilities[k]), sorted(probabilities.iteritems(), key=lambda (k, v): v)
-
-def streaming_test_sample_gmms(gmm_dict, signal):
-    return {label: gmm.score(signal) for label, gmm in gmm_dict.iteritems()}

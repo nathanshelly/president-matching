@@ -52,5 +52,9 @@ def unfold_matrix_list_with_labels(feature_matrices, labels):
     
     return map(list, zip(*temp))
 
+def knn_train_features(dirpath, features=[mfcc]):
+    signal_features, signal_labels = files_to_features(dirpath, features)
+    return unfold_matrix_list_with_labels(signal_features, signal_labels)
+
 if __name__ == "__main__":
     pass
