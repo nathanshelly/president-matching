@@ -9,7 +9,8 @@ from features import compute_features
 import utilities
 
 class audioSocket(websocket.WebSocketHandler):    
-    def check_origin(self, origin):
+		audio = []
+		def check_origin(self, origin):
         return True
 
     def open(self):
@@ -27,11 +28,11 @@ class audioSocket(websocket.WebSocketHandler):
     def record_audio(self, message):
         if message['text'] == 'chunk':
             data = [message['data'][str(x)] for x in range(len(message['data']))]
-            audio += data
+            self.audio += data
         elif message['text'] == 'done':
             self.write_message('ayyyy recording finished')
-            self.write_message(classify(audio))
-            audio = []
+            self.write_message(classify(self.audio))
+            self.audio = []
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
