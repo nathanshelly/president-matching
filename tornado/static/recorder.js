@@ -122,8 +122,7 @@ var Recorder = exports.Recorder = function () {
 
                 var msg = {
                     type: "recording",
-                    text: 'Testing recording',
-                    // only need first channel data in our use case
+                    text: 'chunk',
                     data: input_buffer[0]
                 };
 
@@ -136,8 +135,8 @@ var Recorder = exports.Recorder = function () {
 
             function finishRecording(e) {
                 var msg = {
-                    type: "status",
-                    text: 'all done'
+                    type: "recording",
+                    text: 'done'
                 };
                 ws.send(JSON.stringify(msg));
             }

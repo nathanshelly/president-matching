@@ -74,7 +74,7 @@ window.onload = function init() {
 };
 
 window.onbeforeunload = function pageClosing() {
-    //recorder.closeWebSocket();
+    recorder.closeWebSocket();
 }
 
 // helpful utility

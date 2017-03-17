@@ -1,26 +1,50 @@
-import tornado.ioloop, tornado.web, os
+import tornado.ioloop, tornado.web, os, json, sys
 from tornado.log import enable_pretty_logging
 from tornado import websocket
-enable_pretty_logging()
+import numpy as np
 
-class fuckWebSockets(websocket.WebSocketHandler):
+sys.path.append('../src')
+from gmm import streaming_test_sample_gmms, test_sample_gmms
+from knn import test_knn
+from features import compute_features
+from mfcc import mfcc, filtered_mfcc
+from data import normalize
+import utilities
+
+enable_pretty_logging()
+audio = []
+
+
+class audioSocket(websocket.WebSocketHandler):
 	def check_origin(self, origin):
 		return True
+
 	def open(self):
-		print 'Websocket opened'
+		print 'websocket opened'
+
 	def on_message(self, message):
-		print message
-		self.write_message(u'You said ' + message)
+        if message:
+            message = utilities.convert(json.loads(message))
+            if msg['type'] == 'recording':
+                record_audio(self, message)
+
 	def on_close(self):
-		print 'Websocket closed'
+		print 'websocket closed'
+
+    def record_audio(self, message):
+        if message['text'] == 'chunk':
+            data = [message['data'][str(x)] for x in range(len(message['data']))]
+            audio += data
+        elif message['text'] == 'done':
+            self.write_message('ayyyy recording finished')
+            self.write_message(classify(audio))
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
-		print 'hi main'
 		self.render("templates/index.html")
 
 def make_app():
-	handlers = [(r"/", MainHandler), (r"/websocket", fuckWebSockets)]
+	handlers = [(r"/", MainHandler), (r"/websocket", audioSocket)]
 	settings = {
 			"static_path": "static"
 	}
@@ -28,11 +52,20 @@ def make_app():
 
 if __name__ == "__main__":
 	app = make_app()
-	#app.listen(8181)
-	print 'before the action'
-	app.listen(443, ssl_options={
-		"certfile": "map.crt",
-		"keyfile": "map.key", 
-	})
-	print 'after listening'
+
+	app.listen(443,
+        ssl_options={
+            "certfile": "map.crt",
+            "keyfile": "map.key", })
+
 	tornado.ioloop.IOLoop.current().start()
+
+def classify(signal):
+    signal = normalize(signal)
+    gmm_dict = utilities.load('../professor_gmms.p')
+
+    mfccs = compute_features(np.array(signal), features=[mfcc])
+    pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
+
+    print probs
+    return pred
