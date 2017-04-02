@@ -1,4 +1,4 @@
-from experiments import *
+from pared_experiments import *
 
 if __name__ == "__main__":
 	# print "Experiment 1:"
@@ -40,8 +40,10 @@ if __name__ == "__main__":
 	# print "Experiment 13:"
 	# experiment13()
 
-	print "Experiment 14:"
-	experiment14()
+	# multilingual experiments
+	
+	# print "Experiment 14:"
+	# experiment14()
 
-	print "Experiment 15:"
-	experiment15()
+	# print "Experiment 15:"
+	# experiment15()

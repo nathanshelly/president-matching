@@ -223,7 +223,7 @@ def experiment12():
     """Train a knn with a bunch of samples from ~20 CS professors and Sara's kid.
 
     Test with 1 voice samples from each class."""
-    train_data, train_labels = utilities.load('pickeles/professor_knn_features_train.p')
+    train_data, train_labels = utilities.load('pickles/professor_knn_features_train.p')
 
     clf = train_knn(train_data, train_labels, n_neighbors=5)
     
@@ -249,7 +249,7 @@ def experiment13():
     and see if they're consistent, using KNNs.
 
     Parsing out if trouble is matching different recording scenarios vs jumbled on server."""
-    train_data, train_labels = utilities.load('pickeles/professor_knn_features.p')
+    train_data, train_labels = utilities.load('pickles/professor_knn_features.p')
 
     clf = train_knn(train_data, train_labels, n_neighbors=5)
 
@@ -276,7 +276,7 @@ def experiment14():
 
     Expecting to see their voices matched to themselves."""
 
-    gmm_dict = utilities.load('pickeles/professor_gmms.p')
+    gmm_dict = utilities.load('pickles/professor_gmms.p')
 
     test_data, exp_labels = files_to_features('data/multi_lingual')
     
@@ -299,7 +299,7 @@ def experiment15():
     """Test Fatemah and Goce's non-English recordings against the trained English KNNs.
 
     Expecting to see their voices matched to themselves."""
-    train_data, train_labels = utilities.load('pickeles/professor_knn_features.p')
+    train_data, train_labels = utilities.load('pickles/professor_knn_features.p')
 
     clf = train_knn(train_data, train_labels, n_neighbors=5)
     
