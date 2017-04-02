@@ -377,7 +377,7 @@ var Recorder = exports.Recorder = function () {
 
             for (var index in top_five) {
                 var temp_node = document.createElement('li');
-                temp_node.innerText = this.capitalizeFirstLetter(top_five[index][0]) + ': ' + top_five[index][1].toFixed(2) + '%'
+                temp_node.innerText = this.capitalizeFirstLetter(top_five[index][0]) + ': ' + top_five[index][1].toFixed(2)
                 predictions_node.appendChild(temp_node);
             }
 

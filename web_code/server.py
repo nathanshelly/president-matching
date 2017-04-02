@@ -34,7 +34,7 @@ class audioSocket(websocket.WebSocketHandler):
             self.audio = []
 
     def classify(self, signal):
-        gmm_dict = utilities.load('../professor_gmms_no_us.p')
+        gmm_dict = utilities.load('../pickles/professor_gmms.p')
 
         mfccs = compute_features(np.array(signal))
         pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
