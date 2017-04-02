@@ -261,7 +261,9 @@ var Recorder = exports.Recorder = function () {
             }
 
             function initWebSocket() {
-                ws = new WebSocket('wss://35.187.107.203/websocket');
+				// webworker doesn't have access to window.location.hostname, this is workaround
+				parts = self.location.origin.split('/') 
+                ws = new WebSocket('wss://' + parts[parts.length - 1] + '/websocket');
                 ws.binaryType = 'arraybuffer';
 
                 ws.onclose = function (close_event) {

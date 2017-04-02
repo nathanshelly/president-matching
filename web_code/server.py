@@ -42,19 +42,12 @@ class audioSocket(websocket.WebSocketHandler):
         print probs
         return {'type': 'result', 'pred': pred, 'probs': probs}
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("templates/index.html")
-
 def make_app():
-    handlers = [(r"/", MainHandler), (r"/websocket", audioSocket)]
-    settings = {
-            "static_path": "static"
-    }
-    return tornado.web.Application(handlers, **settings)
+    handlers = [(r"/websocket", audioSocket)]
+    return tornado.web.Application(handlers)
 
 if __name__ == "__main__":
     enable_pretty_logging()
     app = make_app()
-    app.listen(443, ssl_options={"certfile": "map.crt", "keyfile": "map.key", })
+    app.listen(8000, address='127.0.0.1')
     tornado.ioloop.IOLoop.current().start()
