@@ -10,6 +10,7 @@ def train_knn(data, labels, n_neighbors=5):
     return clf
 
 def test_knn(knn_classifier, data):
+    """Runs trained knn on each signal in set of signals"""
     def mode(lst):
         counter = {k:0 for k in set(lst)}
         for e in lst:

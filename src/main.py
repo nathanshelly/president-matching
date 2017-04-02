@@ -1,12 +1,16 @@
 from experiments import *
 
 if __name__ == "__main__":
+	# print "Experiment 1:"
 	# experiment1()
 	
 	# print "Experiment 2:"
 	# experiment2()
 	
+	# print "Experiment 3:"
 	# experiment3()
+
+	# print "Experiment 4:"
 	# experiment4()
 	
 	# print "Experiment 5:"

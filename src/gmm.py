@@ -12,10 +12,10 @@ def train_gmm(data, num_components = 32):
 def test_gmms(gmm_dict, data):
     # returns result of testing each signal in data
     # against each gmm in gmm_dict
-    pred_and_probs = [test_sample_gmms(gmm_dict, signal) for signal in data]
+    pred_and_probs = [test_signal_against_gmms(gmm_dict, signal) for signal in data]
     return [pred for pred, _ in pred_and_probs], [probs for _, probs in pred_and_probs]
     
-def test_sample_gmms(gmm_dict, signal):
-    # generates probabilities for each 
+def test_signal_against_gmms(gmm_dict, signal):
+    # generates probabilities that signal is in each gmm
     probabilities = {label: gmm.score(signal) for label, gmm in gmm_dict.iteritems()}
     return max(probabilities.iterkeys(), key = lambda k: probabilities[k]), sorted(probabilities.iteritems(), key=lambda (k, v): v)

@@ -99,7 +99,7 @@ def experiment6():
         gmm_train_data[label].append(feature_vector)
 
     gmm_dict = train_gmm_set(gmm_train_data)
-    utilities.save(gmm_dict, 'nathan_sasha_pardo_gmm_dict.p')
+    utilities.save(gmm_dict, 'pickles/nathan_sasha_pardo_gmm_dict.p')
     
     test_data, exp_labels = files_to_features('data/natasha_and_pardo/test')
     
@@ -158,7 +158,7 @@ def experiment9():
     """Train a gmm with a bunch of samples from ~20 CS professors and Sara's kid.
 
     Test with 1-2 voice samples from each class."""
-    gmm_dict = utilities.load('professor_gmms_train.p')
+    gmm_dict = utilities.load('pickles/professor_gmms_train.p')
     
     test_data, exp_labels = files_to_features('data/professors_split/train')
     
@@ -183,7 +183,7 @@ def experiment10():
 
     Parsing out if trouble is matching different recording scenarios vs jumbled on server."""
 
-    gmm_dict = utilities.load('professor_gmms.p')
+    gmm_dict = utilities.load('pickles/professor_gmms.p')
 
     test_data, locations = files_to_features('data/sasha_rooms')
     preds, probs = test_gmms(gmm_dict, test_data)
@@ -209,7 +209,7 @@ def experiment11():
 
     Same goal as experiment 10."""
 
-    gmm_dict = utilities.load('professor_gmms.p')
+    gmm_dict = utilities.load('pickles/professor_gmms.p')
 
     test_data, labels = files_to_features('data/sasha_website')
 
@@ -223,7 +223,7 @@ def experiment12():
     """Train a knn with a bunch of samples from ~20 CS professors and Sara's kid.
 
     Test with 1 voice samples from each class."""
-    train_data, train_labels = utilities.load('professor_knn_features_train.p')
+    train_data, train_labels = utilities.load('pickeles/professor_knn_features_train.p')
 
     clf = train_knn(train_data, train_labels, n_neighbors=5)
     
@@ -249,7 +249,7 @@ def experiment13():
     and see if they're consistent, using KNNs.
 
     Parsing out if trouble is matching different recording scenarios vs jumbled on server."""
-    train_data, train_labels = utilities.load('professor_knn_features.p')
+    train_data, train_labels = utilities.load('pickeles/professor_knn_features.p')
 
     clf = train_knn(train_data, train_labels, n_neighbors=5)
 
@@ -276,7 +276,7 @@ def experiment14():
 
     Expecting to see their voices matched to themselves."""
 
-    gmm_dict = utilities.load('professor_gmms.p')
+    gmm_dict = utilities.load('pickeles/professor_gmms.p')
 
     test_data, exp_labels = files_to_features('data/multi_lingual')
     
@@ -299,7 +299,7 @@ def experiment15():
     """Test Fatemah and Goce's non-English recordings against the trained English KNNs.
 
     Expecting to see their voices matched to themselves."""
-    train_data, train_labels = utilities.load('professor_knn_features.p')
+    train_data, train_labels = utilities.load('pickeles/professor_knn_features.p')
 
     clf = train_knn(train_data, train_labels, n_neighbors=5)
     
