@@ -36,16 +36,26 @@ def split_and_save(src, destdir, chunk_length=3):
     sf.write(os.path.join(destdir, "big_%s" % basename), big_chunk, sr)
     sf.write(os.path.join(destdir, "little_%s" % basename), little_chunk, sr)
 
+def split_and_save_into_num(src, destdir, num=5):
+	signal, sr = sf.read(src)
+
+	if not os.path.exists(destdir):
+		os.makedirs(destdir)
+
+	basename = os.path.basename(src)
+	chunks = np.array_split(signal, num)
+
+	for index, chunk in enumerate(chunks):
+		sf.write(os.path.join(destdir, ('%s_chunk_%s' + '.wav') % (basename[:-4], index)), chunk, sr)
+
 def normalize(signal):
     return signal / np.ptp(signal)
 
 def normalize_and_save(src, dest):
-    """Normalize the signal at src by its range, and save it to dest."""
-    signal, sr = sf.read(src)
-
-    norm_sig = normalize(signal)
-
-    sf.write(dest, norm_sig, sr)
+	"""Normalize the signal at src by its range, and save it to dest."""
+	signal, sr = sf.read(src)
+	norm_sig = normalize(signal)
+	sf.write(dest, norm_sig, sr)
 
 def save_professor_gmms(srcdir, dest):
     """Save the professor voices as a pickled GMM."""
@@ -79,8 +89,11 @@ def create_train_and_test_dirs(src_dir):
 			os.mkdir(dir_name)
 	for name in [name for name in os.listdir(src_dir) if name not in ('test', 'train')]:
 		name_path = os.path.join(src_dir, name)
-		train_path = os.path.join(src_dir, 'train')
-		test_path = os.path.join(src_dir, 'test')
+		train_path = os.path.join(src_dir, 'train', name)
+		test_path = os.path.join(src_dir, 'test', name)
+		for dir_name in (train_path, test_path):
+			if not os.path.exists(dir_name):
+				os.mkdir(dir_name)
 
 		shutil.copy2(os.path.join(name_path, 'big_' + name + '.wav'), train_path)
 		shutil.copy2(os.path.join(name_path, 'little_' + name + '.wav'), test_path)
@@ -94,4 +107,5 @@ if __name__ == "__main__":
     # save_professor_gmms('data/professors_split/train', 'professor_gmms_train.p')
     # save_professor_knn_features('data/professors_split/train', 'professor_knn_features_train.p')
     # split_professors()
-	create_train_and_test_dirs('data/professors_split')
+	# create_train_and_test_dirs('data/professors_split')
+	split_and_save_into_num('data/us_split/nathan/big_nathan.wav', 'data/us_split/nathan/chunks', num=5)

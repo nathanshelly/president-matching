@@ -122,3 +122,16 @@ def experiment6():
         print "Top prediction:", preds[i]
         print
 
+def experiment7():
+    """Load trained professor gmm, test against Nathan split into chunks
+	testing for consistent predictions"""
+    gmm_dict = utilities.load('pickles/professor_gmms_train.p')
+
+    test_data, locations = files_to_features('data/us_split/nathan/chunks')
+    preds, probs = test_gmms(gmm_dict, test_data)
+    print "~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    print "Nathan (top prediction and top six in prediction order):\n"
+    for i in range(len(locations)):
+        print "Top prediction:", probs[i][-1][0]
+        print "Top six:", [name for name, _ in reversed(probs[i][-6:])]
+        print

@@ -4,7 +4,7 @@ from tornado import websocket
 import numpy as np
 
 sys.path.append('../src')
-from gmm import test_sample_gmms
+from gmm import test_signal_against_gmms
 from features import compute_features
 import utilities
 
@@ -34,10 +34,10 @@ class audioSocket(websocket.WebSocketHandler):
             self.audio = []
 
     def classify(self, signal):
-        gmm_dict = utilities.load('../professor_gmms_no_us.p')
+        gmm_dict = utilities.load('../pickles/professor_gmms_train.p')
 
         mfccs = compute_features(np.array(signal))
-        pred, probs = test_sample_gmms(gmm_dict, mfccs['features'])
+        pred, probs = test_signal_against_gmms(gmm_dict, mfccs['features'])
 
         print probs
         return {'type': 'result', 'pred': pred, 'probs': probs}
